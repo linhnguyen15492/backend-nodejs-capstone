@@ -20,7 +20,7 @@ const storage = multer.diskStorage({
   }
 })
 
-const upload = multer({ storage: storage })
+const upload = multer({ storage })
 
 // Get all secondChanceItems
 router.get('/', async (req, res, next) => {
@@ -109,7 +109,7 @@ router.put('/:id', async (req, res, next) => {
     const id = req.params.id
 
     // Check if the secondChanceItem exists and send an appropriate message if it doesn't exist
-    const secondChanceItem = await collection.findOne({ id: id })
+    const secondChanceItem = await collection.findOne({ id })
 
     if (!secondChanceItem) {
       logger.error('secondChanceItem not found')
@@ -151,10 +151,10 @@ router.delete('/:id', async (req, res, next) => {
     // Use the collection() method to retrieve the secondChanceItem collection
     const collection = db.collection('secondChanceItems')
 
-    const id = req.params.id;
+    const id = req.params.id
 
     // Find a specific secondChanceItem by ID using the collection.fineOne() method and send an appropriate message if it doesn't exist
-    const secondChanceItem = await collection.findOne({ id: id })
+    const secondChanceItem = await collection.findOne({ id })
 
     if (!secondChanceItem) {
       logger.error('secondChanceItem not found')
@@ -162,7 +162,7 @@ router.delete('/:id', async (req, res, next) => {
     }
 
     // Delete the object and send an appropriate message
-    await collection.deleteOne({ id: id })
+    await collection.deleteOne({ id })
     res.json({ deleted: 'success' })
   } catch (e) {
     next(e)
