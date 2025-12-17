@@ -32,10 +32,12 @@ router.post("/register", async (req, res) => {
     // Create a hash to encrypt the password so that it is not readable in the database
     const salt = await bcryptjs.genSalt(10);
     const hash = await bcryptjs.hash(req.body.password, salt);
+    const email = req.body.email;
+    console.log("email is", email);
 
     // Insert the user into the database
     const newUser = await collection.insertOne({
-      email: req.body.email,
+      email: email,
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       password: hash,
