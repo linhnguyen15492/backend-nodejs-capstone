@@ -47,3 +47,13 @@ curl --location 'http://localhost:3060/api/auth/login' \
         "password": "lac123"
     }'
 ```
+
+**Test update endpoint:**
+
+```bash
+curl --location --request PUT 'http://localhost/api/auth/update' \
+--header 'email: laura@gmail.com' \
+--header 'Content-Type: application/json' \
+--header 'Cookie: jhub-reverse-tool-proxy=s%3A48bd0518-14a7-4be7-a498-b680be3e0dd0.VdP4w1OI%2BqvZJ5Rg2v%2BGqqKpL0KnqsZ6zF%2BjpK0gg5k' \
+--data '{"firstName":"Lauraa"}'
+```
