@@ -3,7 +3,6 @@ const express = require("express");
 const axios = require("axios");
 const logger = require("./logger");
 const expressPino = require("express-pino-logger")({ logger });
-const cors = require("cors");
 
 // Task 1: import the natural library
 const natural = require("natural");
@@ -14,7 +13,6 @@ const port = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(expressPino);
-app.use("*", cors());
 
 // Define the sentiment analysis route
 // Task 3: create the POST /sentiment analysis
