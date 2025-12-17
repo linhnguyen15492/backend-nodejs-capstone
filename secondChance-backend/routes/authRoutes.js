@@ -52,9 +52,51 @@ router.post("/register", async (req, res) => {
     logger.info("User registered successfully");
 
     // Return the user email and the token as a JSON
-    res.json({ authtoken, email });
+    return res.status(200).json({ authtoken, email });
   } catch (e) {
     logger.error(e);
+    return res.status(500).send("Internal server error");
+  }
+});
+
+router.post("/login", async (req, res) => {
+  try {
+    // Connect to `secondChance` in MongoDB through `connectToDatabase` in `db.js`.
+    const db = await connectToDatabase();
+
+    // Access MongoDB `users` collection
+    const collection = db.collection("users");
+
+    // Check for user credentials in database
+    const theUser = await collection.findOne({ email: req.body.email });
+
+    // Check if the password matches the encrypted password and send appropriate message on mismatch
+    if (theUser) {
+      let result = await bcryptjs.compare(req.body.password, theUser.password);
+      if (!result) {
+        logger.error("Passwords do not match");
+        return res.status(404).json({ error: "Wrong pasword" });
+      }
+
+      // Fetch user details from a database
+      const userName = theUser.firstName;
+      const userEmail = theUser.email;
+
+      // Create JWT authentication if passwords match with user._id as payload
+      let payload = {
+        user: {
+          id: theUser._id.toString(),
+        },
+      };
+
+      const authtoken = jwt.sign(payload, JWT_SECRET);
+
+      logger.info("User logged in successfully");
+      return res.status(200).json({ authtoken, userName, userEmail });
+    }
+  } catch (e) {
+    // Send appropriate message if the user is not found
+    logger.error("User not found");
     return res.status(500).send("Internal server error");
   }
 });
