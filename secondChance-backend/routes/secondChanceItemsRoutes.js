@@ -1,7 +1,7 @@
 const express = require('express')
 const multer = require('multer')
-const path = require('path')
-const fs = require('fs')
+// const path = require('path')
+// const fs = require('fs')
 const router = express.Router()
 const connectToDatabase = require('../models/db')
 const logger = require('../logger')
@@ -17,7 +17,7 @@ const storage = multer.diskStorage({
 
   filename: function (req, file, cb) {
     cb(null, file.originalname) // Use the original file name
-  },
+  }
 })
 
 const upload = multer({ storage: storage })
@@ -63,8 +63,8 @@ router.post('/', upload.single('file'), async (req, res, next) => {
     })
 
     // Set the current date in the new item
-    const date_added = Math.floor(new Date().getTime() / 1000)
-    secondChanceItem.date_added = date_added
+    const dateAdded = Math.floor(new Date().getTime() / 1000)
+    secondChanceItem.date_added = dateAdded
 
     // Add the secondChanceItem to the database
     secondChanceItem = await collection.insertOne(secondChanceItem)
@@ -106,8 +106,11 @@ router.put('/:id', async (req, res, next) => {
     // Use the collection() method to retrieve the secondChanceItems collection
     const collection = db.collection('secondChanceItems')
 
+    const id = req.params.id;
+
     // Check if the secondChanceItem exists and send an appropriate message if it doesn't exist
-    const secondChanceItem = await collection.findOne({ id })
+    const secondChanceItem = await collection.findOne({ id: id })
+
     if (!secondChanceItem) {
       logger.error('secondChanceItem not found')
       return res.status(404).json({ error: 'secondChanceItem not found' })
